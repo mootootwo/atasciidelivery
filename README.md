@@ -92,31 +92,31 @@ stretch:
 
 ## Like Rogue
 
-ascii-like character display (atascii text on canvas)
-grid based movement
-character centric
-permadeath / ironman / permanent consequences
-clean slate runs
-random maps
-random actor selection and placement
-bump interactions (destructive)
-pickup quest item from one end of the dungeon and deliver it to the other
-hunger clock -- fuel
-inventory
-turn based
-**sequential turns, if stretch goal not met**
-**forced movement like rogue's traps, if gravity is implemented**
+- ascii-like character display (atascii text on canvas)
+- grid based movement
+- character centric
+- permadeath / ironman / permanent consequences
+- clean slate runs
+- random maps
+- random actor selection and placement
+- bump interactions (destructive)
+- pickup quest item from one end of the dungeon and deliver it to the other
+- hunger clock -- fuel
+- inventory
+- turn based
+- **sequential turns, if stretch goal not met**
+- **forced movement like rogue's traps, if gravity is implemented**
 
 ## Unlike Rogue
 
-no weapons, no ranged combat
-non-random conflict outcomes
-no potions, wands, scrolls
-no interaction with inventory, just bump to take and drop
-no discovery: los, secret doors, traps, unidentified items
-multi-tile actors
-randomly generated actors
-**simultanious turns, if stretch goal met**
-non-modal interface: no modal UI for inventory, ranged targeting, potion interactions, etc
-side view, instead of top-down
-bump to interact:  rogue does not bump to pickup or drop or to interact with environment, this does.
+- no weapons, no ranged combat
+- non-random conflict outcomes
+- no potions, wands, scrolls
+- no interaction with inventory, just bump to take and drop
+- no discovery: los, secret doors, traps, unidentified items
+- multi-tile actors
+- randomly generated actors
+- **simultanious turns, if stretch goal met**
+- non-modal interface: no modal UI for inventory, ranged targeting, potion interactions, etc
+- side view, instead of top-down
+- bump to interact:  rogue does not bump to pickup or drop or to interact with environment, this does.
