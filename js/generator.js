@@ -69,6 +69,13 @@ function generateFrame(width,height,xOffset,yOffset){
     // ║ 2551
     // ╚ 255a
     // ╝ 255d
+
+    // ┌ 250c
+    // ─ 2500
+    // ┐ 2510
+    // │ 2502
+    // └ 2514
+    // ┘ 2518
     let output = [];
     let n=0;
 
@@ -76,13 +83,13 @@ function generateFrame(width,height,xOffset,yOffset){
     // i = 0+xOffset;
     // j = 0+yOffset;
     //output[n] = new Entity(0+xOffset,0+yOffset,"\u2554",255,255,255,1);
-    output[n] = new Tile(new Coords(0+xOffset,0+yOffset),new Glyph("\u2554",255,255,255,1));
+    output[n] = new Tile(new Coords(0+xOffset,0+yOffset),new Glyph("\u250c",255,255,255,1));
     n++;
 
     // ═ 2550
     for (let j=0; j<height; j=j+height-1){      // draw only top and botgtom rows
         for (let i=1; i<width-1; i++){          // offset by 1 so we dont draw over the corners
-            output[n] = new Tile(new Coords(i+xOffset,j+yOffset),new Glyph("\u2550",255,255,255,1));
+            output[n] = new Tile(new Coords(i+xOffset,j+yOffset),new Glyph("\u2500",255,255,255,1));
             n++;
         }
     }
@@ -90,13 +97,13 @@ function generateFrame(width,height,xOffset,yOffset){
     // ╗ 2557
     // i = width-1+xOffset;
     // j = 0+yOffset;
-    output[n] = new Tile(new Coords(width-1+xOffset,0+yOffset),new Glyph("\u2557",255,255,255,1));
+    output[n] = new Tile(new Coords(width-1+xOffset,0+yOffset),new Glyph("\u2510",255,255,255,1));
     n++;
     
     // ║ 2551
     for (let i=0; i<width; i=i+width-1){         // draw only left and right columns
         for (let j=1; j<height-1; j++){          // offset by 1 so we dont draw over the corners
-            output[n] = new Tile(new Coords(i+xOffset,j+yOffset),new Glyph("\u2551",255,255,255,1));
+            output[n] = new Tile(new Coords(i+xOffset,j+yOffset),new Glyph("\u2502",255,255,255,1));
             n++;
         }
     }
@@ -104,13 +111,13 @@ function generateFrame(width,height,xOffset,yOffset){
     // ╚ 255a
     // i = 0+xOffset;
     // j = height-1+yOffset;
-    output[n] = new Tile(new Coords(0+xOffset,height-1+yOffset),new Glyph("\u255a",255,255,255,1));
+    output[n] = new Tile(new Coords(0+xOffset,height-1+yOffset),new Glyph("\u2514",255,255,255,1));
     n++;
     
     // ╝ 255d
     // i = width-1+xOffset;
     // j = height-1+yOffset;
-    output[n] = new Tile(new Coords(width-1+xOffset,height-1+yOffset),new Glyph("\u255d",255,255,255,1));
+    output[n] = new Tile(new Coords(width-1+xOffset,height-1+yOffset),new Glyph("\u2518",255,255,255,1));
     
     return output;
 }

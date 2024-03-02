@@ -28,8 +28,9 @@ class Game{
         this.tickIntervalID = null;                // can this be made local to mainLoop() ?
         this.renderIntervalID = null;              // can this be made local to mainLoop() ?
 
-        this.testScene = new Scene();
-        this.test2Scene = new Scene();
+        this.introScene = new Scene();
+        this.gameScene = new Scene();
+        this.outroScene = new Scene();
     }
 
     // TODO: put this stuff into external properties data
@@ -42,33 +43,40 @@ class Game{
         let bg2Layer = new Layer(display.fonts[0],8);
         let fx2Layer = new Layer(display.fonts[0],64);
 
+        let fx3Layer = new Layer(display.fonts[0],64);
+
         // these need to not use hard-coded tile counts
         // need to derive from tile size and canvas dimensions
         bgLayer.elements.push(new EntitySet(generateGrid("\u253c",80,80)));
         fgLayer.elements.push(new EntitySet(generateNumbersLeft(40)));
         fgLayer.elements.push(new EntitySet(generateFrame(36,38,3,1)));  // leave two off the width and shift right to account for the number column
-        fxLayer.elements.push(new EntitySet(glowText("..*.@.*..")));
+        fxLayer.elements.push(new EntitySet(glowText("Intro Scene")));
 
-        bg2Layer.elements.push(new Map(80,80, new Glyph("\u25a0",65,65,65,1)));
-        fx2Layer.elements.push(new EntitySet(glowText("-=2=-")));
+        bg2Layer.elements.push(new Map(80,80, new Glyph("\u25ca",65,65,65,1)));
+        fx2Layer.elements.push(new EntitySet(glowText("Game Scene")));
+
+        fx3Layer.elements.push(new EntitySet(glowText("Outro Scene")));
 
         // this stuff should probably be rolled into some sort of Scene.setup() method
-        this.testScene.layers.push(bgLayer, fgLayer, fxLayer);
-        this.testScene.entities.push(new Counter);
-        this.testScene.exit.push(this.test2Scene);
+        this.introScene.layers.push(bgLayer, fgLayer, fxLayer);
+        this.introScene.entities.push(new Counter);
+        this.introScene.exit.push(this.gameScene);
 
-        this.test2Scene.layers.push(bg2Layer, fx2Layer);
-        this.test2Scene.entities.push(new Actor(new Coords(10,10), new Glyph("&",200,50,50,1)));
-        this.test2Scene.exit.push(this.testScene);
+        this.gameScene.layers.push(bg2Layer, fx2Layer);
+        this.gameScene.entities.push(new Actor(new Coords(10,10), new Glyph("&",200,50,50,1)));
+        this.gameScene.exit.push(this.outroScene);
+
+        this.outroScene.layers.push(fx3Layer);
+        this.outroScene.exit.push(this.introScene);
 
         // setting up input handling
-        this.testScene.inputEvents = function(e){
+        this.introScene.inputEvents = function(e){
             if (e === "up" || e === "down" || e === "left" || e === "right" || e === "space"){
                 console.info(e+" event");
-                game.testScene.entities[0].count ++;
-                console.info("counter "+game.testScene.entities[0].count);
-                if (game.testScene.entities[0].count === 3){
-                    game.testScene.entities[0].count = 0;
+                game.introScene.entities[0].count ++;
+                console.info("counter "+game.introScene.entities[0].count);
+                if (game.introScene.entities[0].count === 3){
+                    game.introScene.entities[0].count = 0;
                     game.activeScene = game.activeScene.exit[0]; 
                 }
             return;
@@ -78,7 +86,7 @@ class Game{
             return;
             };
         }
-        this.test2Scene.inputEvents = function(e){
+        this.gameScene.inputEvents = function(e){
             if (e === "up" || e === "down" || e === "left" || e === "right"){
                 console.info(e+" event");
                 return;
@@ -89,6 +97,13 @@ class Game{
                 return;
             };
             if (e === "escape"){
+                console.info(e+" event");
+                game.activeScene = game.activeScene.exit[0]; 
+                return;
+            };
+        }
+        this.outroScene.inputEvents = function(e){
+            if (e === "space"){
                 console.info(e+" event");
                 game.activeScene = game.activeScene.exit[0]; 
                 return;
@@ -129,7 +144,7 @@ class Game{
         await display.setupDisplay();                   // this is only here because we need to wait for font loading
         await this.setupScenes();                       // this relies on fonts from display.. TODO: decouple these
 
-        this.activeScene = this.testScene;
+        this.activeScene = this.introScene;
     
         this.renderScene(this.activeScene);
     }  
