@@ -10,8 +10,8 @@ e.g. a layer or scene
 */
 
 //import {drawChar} from './screen.js';
-import {display} from './frontend.js';
-export {Tile, Coords, Glyph, Counter, Actor};
+import {display} from './frontend.js';              // needed so we can call display.drawChar()
+export {Tile, Coords, Glyph, Counter, Actor, MultiTile};
 
 class Coords{
     constructor(x, y){
@@ -52,8 +52,6 @@ class GlyphAnimated{
 // new Tile(new Coords(x,y),new Glyph(char,r,g,b,a); 
 class Tile{
     constructor(coords, glyph){
-        // this.coords = coords;
-        // this.glyph = glyph;
         this.x = coords.x;
         this.y = coords.y;
         this.char = glyph.char;
@@ -65,8 +63,6 @@ class Tile{
     // or with some super-class
     draw(){
         display.drawChar(this.x,this.y, this.char, this.colour);
-        // or this way
-        //display.drawChar(this.coords.x,this.coords.y, this.glyph.char, this.glyph.colour);
     }
 }
 
@@ -134,8 +130,8 @@ class MultiTile{
     }
 
     draw(){
-        for (i=0;i<this.tiles.length;i++){
-            this.tiles[i].draw;
+        for (let i=0;i<this.tiles.length;i++){
+            this.tiles[i].draw();
         }
     }
 
@@ -143,11 +139,16 @@ class MultiTile{
     // but multi-tile movement is special
     // should there be a stand-alone component for multitile moves?
     // or just build it in here?
-    move(){}
+    move(dx, dy){
+        for(let i=0;i<this.tiles.length;i++){
+            this.tiles[i].x += dx;
+            this.tiles[i].y += dy;
+        }
+    }
 
 }
 
-class move{
+class Move{
     constructor(dx,dy){
         this.dx = dx;
         this.dy = dy;
@@ -171,7 +172,7 @@ class move{
     }
 }
 
-class moveClockwise{
+class MoveClockwise{
     constructor(x,y){
         this.x = x;
         this.y = y;

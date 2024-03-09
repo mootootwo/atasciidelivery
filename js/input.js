@@ -6,6 +6,8 @@ handler routes events to the active scene
 
 export {ListenInput};
 
+// circular import..
+// TODO: improve or remove?
 import {game} from './game.js';      // can this be designed to avoid importing game here?
 
 let inputProperties = { };

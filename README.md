@@ -1,7 +1,5 @@
 # ATASCII Delivery
-2024 7 Day Roguelike
-
-most of this pasted from text.. need to fix markdown formatting. 
+2024 7 Day Roguelike 
 
 This is a recreation of an 8-bit Atari game that I remember playing as a child.
 I do not remember the title or publisher or anything that could help identify the original game.
@@ -50,45 +48,6 @@ stretch:
 - increase city difficulty
 - landing pads with overhangs
 - tall towers and canyons
-
-## Day Plan
-
-1
-- font package loaded
-- scenes configures
-    - intro
-    - main play
-    - outro
-stretch:
-- generate city
-- generate ships
-
-2
-- movement
-- pickup and deliver parcel
-- bump/death
-stretch:
-- UI 
-- fuel
-- out of bounds
-
-3
-- velocity
-- simultanious movement
-- gravity
-
-4
-- movement planning and vector forecast effects
-
-5
-- extra UI FX, landing and fuel notices
-
-6
-- additional FX, city lights, ship animations
-- ui notifications blink or glow or bounce
-
-7
-- tbd
 
 ## Like Rogue
 

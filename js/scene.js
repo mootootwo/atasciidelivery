@@ -17,21 +17,8 @@ import {Tile, Coords} from './components.js';               // TODO:  This depen
                                                         // FIX:  get anything depending on this moved to generator.js
 
 
-export {Scene, Layer, FxLayer, Map, EntitySet};
+export {Scene, Layer, /*FxLayer,*/ Map, EntitySet};
 
-function setSceneProperties(){
-    sceneProperties.push({
-        name : "testScene",
-        layers : [ ],
-        exit : [ ]
-
-    });
-    sceneProperties.push({
-        name : "test2Scene",
-        layers : [ ],
-        exit : [ ]
-    });
-}
 
 // For now we draw an entire layer in one font and pt size
 // setting canvas ctx properties for every tile/glyph is possible but seems heavy
@@ -57,6 +44,7 @@ render(){
 
 }
 
+/*
 // add this to Layer to allow per-character font and size
 // does not save or restore ctx properties
 // may polute pre-set fonts or layer grid dimensions
@@ -77,6 +65,7 @@ class FxLayer {
     }
 
 }
+*/
 
 // 2d array of tiles
 // used for game play space
@@ -102,6 +91,55 @@ class Map{
         }
         return this.tiles;
     }
+
+////
+// TODO: fix these..
+// ported from older project
+// but mostly good in principle
+    inBounds(x,y){ //checks to see if a tile is within the game area
+        return x>=0 && y>=0 && x<(this.xTiles) && y<(this.yTiles);
+    }
+
+    getTile(x, y){ // returns the map tile found at some coords
+        if(this.inBounds(x,y)){
+            return this.tiles[x][y];
+        }else{
+            return new Void; //downstream tests require a valid constructor type to be returned
+        }
+    }
+
+    // runs through entity list and checks for blocking entites at a given location
+    // only returns first one found
+    // assumes there would only be one generated at a location
+    // TODO: improve this
+    getBlockingEntity(x,y){
+        
+        for (let i=0; i<this.entities.length; i++){
+            if (x===this.entities[i].x&&y===this.entities[i].y){
+                if (this.entities[i].passable===false){
+                    return this.entities[i];
+                }
+            }
+        }
+        return null;
+    }
+
+    // returns a clear Space tile
+    getRandomClearTile(){
+        let x=randomRange(0,this.width);
+        let y=randomRange(0,this.height);
+        
+        if (this.getTile(x,y).constructor.name==="Space"){return this.tiles[x][y];} // i feel like there is a redundant lookup in this statement that i could improve
+        else{return this.getRandomClearTile()};
+
+        // TODO:
+        // need to add test for non-tile entites at this location
+        // need to add test for docking port danger zone at this location
+    }
+
+
+////
+
 
     draw(){                                         //draws the map
         for(let i=0;i<this.xTiles;i++){
@@ -137,17 +175,22 @@ class Scene{
         this.exit = [];                         // scene to exit to for various exit conditions
 	}
 
-    setupUpdateList(){
+    setupEntities(){
+        //this.layers.push(new EntitySet([]))                         // TODO: move this to paramater based scene configuration in game.js
+
         for (let i=0; i<this.entities.length; i++){
             if (this.entities[i].updateable){                   // TODO: this "updateable" does not exist yet.. placeholder
-
                 this.updateList.push(this.entities[i]);        
             }
+
+            //if (this.entities[i].drawable){                     // TODO: this "drawable" does not exist yet.. placeholder
+            //    this.layers[1].push(this.entities[i]);           // TODO: unkludge.  move this to paramater based scene configuration
+            //}
         }
-   }
+    }
 
     setupScene(){  // or just "setup": from the dept of redundancy dept
-        this.setupUpdateList();
+        this.setupEntities();
     }
 
     renderLayers(){

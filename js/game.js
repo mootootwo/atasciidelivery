@@ -13,7 +13,7 @@ export {game};
 import {display} from './frontend.js';
 
 import {Scene, Layer, Map, EntitySet} from './scene.js';
-import {generateNumbersLeft, generateGrid, generateFrame, glowText} from './generator.js';
+import {generateNumbersLeft, generateGrid, generateFrame, glowText, generateSkyline, generateShip} from './generator.js';
 import {ListenInput} from './input.js';
 import {Glyph, Counter, Actor, Coords} from './components.js';
 
@@ -38,21 +38,23 @@ class Game{
     async setupScenes(){
         let bgLayer = new Layer(display.fonts[0],8);
         let fgLayer = new Layer(display.fonts[0],16);
-        let fxLayer = new Layer(display.fonts[0],64);
+        let fxLayer = new Layer(display.fonts[0],32);
 
-        let bg2Layer = new Layer(display.fonts[0],8);
-        let fx2Layer = new Layer(display.fonts[0],64);
+        let bg2Layer = new Layer(display.fonts[0],16);
+        let fg2Layer = new Layer(display.fonts[0],16);
+        let fx2Layer = new Layer(display.fonts[0],32);
 
-        let fx3Layer = new Layer(display.fonts[0],64);
+        let fx3Layer = new Layer(display.fonts[0],32);
 
         // these need to not use hard-coded tile counts
         // need to derive from tile size and canvas dimensions
         bgLayer.elements.push(new EntitySet(generateGrid("\u253c",80,80)));
         fgLayer.elements.push(new EntitySet(generateNumbersLeft(40)));
-        fgLayer.elements.push(new EntitySet(generateFrame(36,38,3,1)));  // leave two off the width and shift right to account for the number column
+        fgLayer.elements.push(new EntitySet(generateFrame(36,38,3,1)));     // leave two off the width and shift right to account for the number column
         fxLayer.elements.push(new EntitySet(glowText("Intro Scene")));
 
-        bg2Layer.elements.push(new Map(80,80, new Glyph("\u25ca",65,65,65,1)));
+        bg2Layer.elements.push(new Map(40,40, new Glyph("\u25ca",30,30,30,1)));
+        generateSkyline(bg2Layer.elements[0]);                              // TODO: this probably isnt the best way of doing this..
         fx2Layer.elements.push(new EntitySet(glowText("Game Scene")));
 
         fx3Layer.elements.push(new EntitySet(glowText("Outro Scene")));
@@ -62,9 +64,13 @@ class Game{
         this.introScene.entities.push(new Counter);
         this.introScene.exit.push(this.gameScene);
 
-        this.gameScene.layers.push(bg2Layer, fx2Layer);
-        this.gameScene.entities.push(new Actor(new Coords(10,10), new Glyph("&",200,50,50,1)));
+        this.gameScene.layers.push(bg2Layer, fg2Layer, fx2Layer);
+        this.gameScene.entities.push(new Actor(new Coords(10,10), new Glyph("@",200,200,200,1)));
+        // TODO: need to call generateShip() on a per-tic basis
+        this.gameScene.entities.push(generateShip());                              // TODO: this probably isnt the best way of doing this..
+        this.gameScene.layers[1].elements.push(this.gameScene.entities[1]);          // TODO: PLACEHOLDER HARDCODED
         this.gameScene.exit.push(this.outroScene);
+        this.gameScene.setupScene();
 
         this.outroScene.layers.push(fx3Layer);
         this.outroScene.exit.push(this.introScene);
@@ -75,7 +81,7 @@ class Game{
                 console.info(e+" event");
                 game.introScene.entities[0].count ++;
                 console.info("counter "+game.introScene.entities[0].count);
-                if (game.introScene.entities[0].count === 3){
+                if (game.introScene.entities[0].count === 1){
                     game.introScene.entities[0].count = 0;
                     game.activeScene = game.activeScene.exit[0]; 
                 }
@@ -93,7 +99,8 @@ class Game{
             };
             if (e === "space"){
                 console.info(e+" event");
-                game.activeScene.update()
+                //game.activeScene.update()
+                game.activeScene = game.activeScene.exit[0]; // TODO: remove.. just here to allow flipping between scenes with single key
                 return;
             };
             if (e === "escape"){
